@@ -49,17 +49,17 @@ Once processing is complete, moves the video to the processed folder.
 Configuration Parameters:
 
 ## --- Target objects and model ---
-TARGET_CLASSES = ["person", "bottle", "tv"]  # Objects to detect
-MODEL_NAME = "yolov8n.pt"                   # Detection model
+- TARGET_CLASSES = ["person", "bottle", "tv"]  # Objects to detect
+- MODEL_NAME = "yolov8n.pt"                   # Detection model
 
 ## --- Main output folders ---
-DETECTED_FRAMES_ROOT = "detected"           # Folder for detected images and logs
-PROCESSED_VIDEO_DIR = "processed"           # Folder for videos after processing
-CONF_THRESHOLD = 0.5                         # Confidence threshold for detection
+- DETECTED_FRAMES_ROOT = "detected"           # Folder for detected images and logs
+- PROCESSED_VIDEO_DIR = "processed"           # Folder for videos after processing
+- CONF_THRESHOLD = 0.5                         # Confidence threshold for detection
 
 ## --- Optimization settings ---
-SAVE_INTERVAL_FRAMES = 10                    # Save 1 out of every 10 frames with detected objects
-PROGRESS_UPDATE_INTERVAL = 10                # Interval for updating progress bar
+- SAVE_INTERVAL_FRAMES = 10                    # Save 1 out of every 10 frames with detected objects
+- PROGRESS_UPDATE_INTERVAL = 10                # Interval for updating progress bar
 
 
 ## --- Folders used:
