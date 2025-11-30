@@ -1,7 +1,7 @@
 # AI Vision Object Detection
 A powerful, open-source framework for real-time computer vision and image processing. This project provides fast and accurate object detection capabilities using modern deep-learning models. Designed for developers, researchers, and hobbyists, the toolkit enables seamless integration into applications requiring live video analysis, image recognition, and intelligent automation.
 
-Key features include:
+## Key features include:
 
 Real-time object detection with high accuracy
 
