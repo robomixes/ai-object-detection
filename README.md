@@ -15,7 +15,7 @@ A powerful, open-source framework for real-time computer vision and image proces
 
 Perfect for anyone building smart vision systems or experimenting with cutting-edge AI detection models.
 
-# Video Recording: record-pi.py
+# 1. Video Recording: record-pi.py
 
 This script captures video from a Raspberry Pi camera (it can be adjusted to use a USB camera) and saves the recorded videos to the specified folder in .MP4 format.
 
@@ -34,7 +34,7 @@ Video files will be saved in .MP4 format.
 - output_dir = "recorded"
 - frame_size = (1280, 720)
 
-# Video Processing: process-video-pi.py
+# 2. Video Processing: process-video-pi.py
 
 This script processes videos from the recorded folder. For each video, it:
 
