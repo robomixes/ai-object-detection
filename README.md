@@ -19,17 +19,53 @@ Perfect for anyone building smart vision systems or experimenting with cutting-e
 
 This script captures video from a Raspberry Pi camera (it can be adjusted to use a USB camera) and saves the recorded videos to the specified folder in .MP4 format.
 
-Parameters:
+## --- Parameters:
 
 - output_dir (default: "recorded") – the directory where recorded videos will be saved.
 
 - frame_size (default: (1280, 720)) – the resolution of the recorded video frames.
 
-Output:
+## --- Output:
 
 Video files will be saved in .MP4 format.
 
-Example usage:
+## --- Example usage:
 
 - output_dir = "recorded"
 - frame_size = (1280, 720)
+
+# Video Processing: process-video-pi.py
+
+This script processes videos from the recorded folder. For each video, it:
+
+Detects objects specified in a selected list.
+
+Saves images of the detected objects.
+
+Generates a log file in the detected folder.
+
+Once processing is complete, moves the video to the processed folder.
+
+Configuration Parameters:
+
+## --- Target objects and model ---
+TARGET_CLASSES = ["person", "bottle", "tv"]  # Objects to detect
+MODEL_NAME = "yolov8n.pt"                   # Detection model
+
+## --- Main output folders ---
+DETECTED_FRAMES_ROOT = "detected"           # Folder for detected images and logs
+PROCESSED_VIDEO_DIR = "processed"           # Folder for videos after processing
+CONF_THRESHOLD = 0.5                         # Confidence threshold for detection
+
+## --- Optimization settings ---
+SAVE_INTERVAL_FRAMES = 10                    # Save 1 out of every 10 frames with detected objects
+PROGRESS_UPDATE_INTERVAL = 10                # Interval for updating progress bar
+
+
+## --- Folders used:
+
+recorded – input videos to be processed.
+
+detected – stores detected object images and log files.
+
+processed – stores videos after they have been processed.
