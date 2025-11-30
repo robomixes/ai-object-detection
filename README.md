@@ -69,3 +69,22 @@ recorded – input videos to be processed.
 detected – stores detected object images and log files.
 
 processed – stores videos after they have been processed.
+
+## --------------- Log file example --------------
+- YOLOv8 Detection Analysis for: video_20251130_224142.mp4 
+- Target Classes: person, bottle, tv 
+- Video FPS: 30.00
+
+-----------------------------------------------------------
+FRAME_INDEX | TIME (HH:MM:SS.ms) | DETECTED OBJECTS
+-----------------------------------------------------------
+         30 | 0000:00:01 | person
+         50 | 0:00:01.66 | person
+         60 | 0000:00:02 | person
+         70 | 0:00:02.33 | person
+         80 | 0:00:02.66 | person
+         90 | 0000:00:03 | person
+        100 | 0:00:03.33 | person
+        350 | 0:00:11.66 | tv, person
+        360 | 0000:00:12 | tv
+
