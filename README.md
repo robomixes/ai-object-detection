@@ -88,3 +88,24 @@ FRAME_INDEX | TIME (HH:MM:SS.ms) | DETECTED OBJECTS
         350 | 0:00:11.66 | tv, person
         360 | 0000:00:12 | tv
 
+# 3. Object Detection and Locking Mechanism
+
+This section contains three main scripts:
+
+- object-locking-pi
+
+- object-locking-mqtt-receiver-pi
+
+- object-locking-servo-movement-serial-pi-arduino
+
+The idea behind this project is to define a list of target objects (e.g., person, car, TV, etc.).
+The camera will detect the defined objects, and using your mouse you can lock one object as the main focus. Once locked, the camera will attempt to keep that object in view.
+
+Running object-locking-pi allows you to lock a detected object and publish MQTT messages. These messages can be received by other scripts to take further actions.
+
+The second script, object-locking-mqtt-receiver-pi, is an example of receiving MQTT messages from the object-locking-pi script and then sending serial commands based on the object’s status.
+
+The last script, object-locking-servo-movement-serial-pi-arduino, shows how to receive the serial commands, process them, and move a servo to help keep the locked object centered.
+
+
+
