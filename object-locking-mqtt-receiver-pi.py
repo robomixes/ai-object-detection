@@ -3,6 +3,7 @@ import time
 import json
 import serial
 import threading
+import sys # Import sys for cleaner exit on failure
 
 # --- MQTT Configuration ---
 MQTT_BROKER = "localhost"
@@ -22,8 +23,8 @@ tracking_lost = False
 last_command = None
 repeat_count = 0
 REQUIRED_REPEATS = 3
-STABLE_ZONE = 10       # ±20 = stable zone
-busy = False           # flag: waiting for stop
+STABLE_ZONE = 10        # ±20 = stable zone
+busy = False            # flag: waiting for stop
 
 # -----------------------------------------------------------------
 # --- Serial Write Function ---
@@ -31,7 +32,8 @@ busy = False           # flag: waiting for stop
 def send_to_arduino(data_string):
     global arduino
     if arduino is None or not arduino.is_open:
-        print("❌ Serial not ready")
+        # This print will occur if serial is not initialized, but MQTT will still receive messages.
+        print("❌ Serial not ready. Command not sent.")
         return
     try:
         arduino.write((data_string + '\n').encode('utf-8'))
@@ -45,6 +47,8 @@ def handle_command_with_stop(command):
     Blocks new commands until finished.
     """
     global busy
+    # Only proceed if serial is potentially connected, otherwise the lock serves no purpose.
+    # We still manage 'busy' to regulate message processing, even without serial.
     busy = True
     send_to_arduino(command)
     time.sleep(1)
@@ -123,6 +127,7 @@ def on_message(client, userdata, msg):
 
             if repeat_count >= REQUIRED_REPEATS:
                 # Execute command with stop in a separate thread
+                # The send_to_arduino function handles the case where the serial port is not open.
                 threading.Thread(target=handle_command_with_stop, args=(gimbal_command,)).start()
                 repeat_count = 0
             else:
@@ -140,35 +145,43 @@ def main():
     global arduino
     print("Starting Gimbal MQTT Receiver...")
 
-    try:
-        arduino = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=SERIAL_TIMEOUT)
-        time.sleep(2)
-    except Exception as e:
-        print(f"❌ Serial failed: {e}")
-        return
-
+    ## 1. Initialize MQTT First
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, client_id=MQTT_CLIENT_ID)
     client.on_connect = on_connect
     client.on_message = on_message
 
     try:
+        # Attempt to connect to the broker
         client.connect(MQTT_BROKER, MQTT_PORT, 60)
     except Exception as e:
         print(f"❌ MQTT connection failed: {e}")
-        arduino.close()
-        return
+        # If MQTT fails, there's no point in running, so exit.
+        sys.exit(1)
 
+    ## 2. Initialize Serial Connection (Optional for initial run)
     try:
+        print(f"Attempting to connect to serial port {SERIAL_PORT}...")
+        # If this fails, 'arduino' remains None, but the program continues.
+        arduino = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=SERIAL_TIMEOUT)
+        time.sleep(2) # Wait for Arduino reset
+        print("✅ Serial connected.")
+    except Exception as e:
+        print(f"⚠️ Serial failed: {e}. Program will proceed, but commands will not be sent to device.")
+        # DO NOT exit here. This is the main change.
+
+    ## 3. Start MQTT Loop
+    try:
+        print("Starting MQTT loop forever...")
         client.loop_forever()
     except KeyboardInterrupt:
         print("\n🛑 Exiting.")
     finally:
         client.loop_stop()
         client.disconnect()
+        # Clean up serial connection only if it was successfully opened
         if arduino and arduino.is_open:
             arduino.close()
             print("Serial closed.")
 
 if __name__ == "__main__":
     main()
-
